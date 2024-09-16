@@ -1,5 +1,4 @@
 Open away ticketing
-Project genesis?
 
 Host in public GitHub pages repo with open prs. Kz name!
 Open. Decentralised. System of record. Get the bros involved!
