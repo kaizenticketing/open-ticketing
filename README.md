@@ -1,3 +1,3 @@
 Hello World.
 
-[Open Away Ticketing](open-away-ticketing.md)
+[Open Away Ticketing]({{ site.baseurl }}/open-away-ticketing.md)
