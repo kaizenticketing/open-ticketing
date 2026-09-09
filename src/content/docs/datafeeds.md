@@ -88,7 +88,7 @@ Each webhook POST will include the following headers:
 * **X-Kaizen-Event** – mirrors eventType (e.g. Updated)
 * **X-Kaizen-Source** – Always Kaizen
 * **X-Idempotency-Key** – mirrors idempotencyKey in the envelope
-* **X-Kaizen-Signature** – HMAC-SHA256 (hex) of the raw request body, computed with the shared secret. **You must verify this to ensure authenticity**
+* **X-Kaizen-Signature** – HMAC-SHA256 (hex) of the raw request body, computed with the shared secret. NOTE: The value is prefixed with sha256= (e.g., sha256=a2b14dabsdw) **You must verify this to ensure authenticity**
 
 ## Retry / resilience behaviour
 
@@ -159,10 +159,11 @@ Without signature verification, anyone could send fake webhooks to your endpoint
 
 1. Read the raw request body (before parsing JSON)
 2. Read the X-Kaizen-Signature header
-3. Recompute HMAC-SHA256(rawBody, sharedSecret) using the same secret
-4. Compare your computed hash to the header value (use a constant-time comparison to prevent timing attacks)
-5. If they match → Trust the request and process it
-6. If they don't match, treat as suspicious (log and return 4xx)
+3. Recompute HMAC-SHA256(rawBody, sharedSecret) using the same secret and hex-encode it
+4. The header value will arrive formatted as "sha256=<hex>"
+5. Add 'sha256=' to the front of the hash you just calculated, then compare the two values (use a constant-time comparison to prevent timing attacks)
+6. If they match → Trust the request and process it
+7. If they don't match, treat as suspicious (log and return 4xx)
 
 ## Date/Time Format
 
